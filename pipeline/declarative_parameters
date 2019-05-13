@@ -1,0 +1,23 @@
+pipeline {
+    agent  {
+        node{
+            label 'master'
+            customWorkspace "myWorkspace"
+        }
+
+    }
+
+
+    parameters {
+        string(name: 'PERSON', defaultValue: 'Jenkins', description: '输入的文本参数')
+    }
+
+    stages {
+        stage('Test Parameters'){
+            steps {
+                echo "Hello ${params.PERSON}"
+            }
+        }
+    }
+
+}

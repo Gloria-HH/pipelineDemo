@@ -1,0 +1,52 @@
+pipeline {
+    agent  {
+        node{
+            label 'master'
+            customWorkspace "pipelineWorkspace"
+        }
+
+    }
+  // 保留最新两次构建信息
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '2'))
+    }
+
+    stages {
+        stage('begin'){
+            steps {
+                echo 'hello pipeline begin'
+                sleep 1
+            }
+        }
+        stage('running'){
+            steps {
+                echo 'hello pipeline running'
+                sleep 1
+            }
+        }
+        stage('finish'){
+            steps {
+                echo 'hello pipeline finish'
+                sleep 2
+                sh 'exit 0'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'goodbay pipeline success!'
+            sleep 1
+        }
+
+        failure {
+            echo 'ops!!! pipeline failed....'
+            sleep 1
+        }
+
+        always {
+            echo 'always say goodbay'
+        }
+    }
+
+}

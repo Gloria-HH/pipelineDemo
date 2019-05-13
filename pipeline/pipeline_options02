@@ -1,0 +1,25 @@
+pipeline {
+    agent  {
+        node{
+            label 'master'
+            customWorkspace "myWorkspace"
+        }
+
+    }
+
+    options {
+        timeout(time: 3, unit: 'SECONDS')
+        retry(5)
+    }
+
+    stages {
+        stage('success'){
+            steps {
+                sh 'date'
+                sh 'sleep 1'
+                sh 'exit -1'
+            }
+        }
+    }
+
+}

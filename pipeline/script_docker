@@ -1,0 +1,48 @@
+pipeline{
+    agent any
+    //定义仓库地址
+    environment {
+        REPOSITORY="https://github.com/Gloria-HH/SpringBootDemo.git"
+    }
+
+    stages {
+        stage('pull_code'){
+            steps {
+                echo "start fetch code from git:${REPOSITORY}"
+                git  branch: 'master',url: ${REPOSITORY}, credentialsId: '80cc0d95-d354-4cd1-be74-59bec14dce02'
+            }
+        }
+        stage('check_code'){
+            steps {
+                //伪代码检查
+                echo "start  check code"
+            }
+        }
+
+        stage('unit_test'){
+            steps {
+                echo "start unit test"
+                // sh 'mvn clean install test'
+            }
+        }
+
+        stage('build'){
+            steps {
+                echo "start build image"
+                sh 'mvn clean install -Dmaven.test.skip=true'
+                sh 'docker build -t spring-boot-demo'
+                //推送镜像到163仓库
+                sh 'docker push spring-boot-demo'
+
+            }
+        }
+
+        stage('start'){
+            steps {
+                echo "start sso-merryyou"
+                sh 'docker-compose up -d --build'
+            }
+        }
+
+    }
+}

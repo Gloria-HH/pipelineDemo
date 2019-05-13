@@ -1,0 +1,42 @@
+// environment demo using declarative
+pipeline {
+    agent  {
+        node{
+            label 'master'
+            customWorkspace "myWorkspace"
+        }
+
+    }
+
+    environment {
+        str = 'hello world'
+    }
+
+    stages {
+        stage('env_1'){
+            steps {
+                echo 'env_1'
+                echo str
+            }
+        }
+        stage('env_2'){
+            steps {
+                echo 'env_2'
+                sh 'echo ${str}'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'goodbay pipeline success!'
+        }
+
+        failure {
+            echo 'ops!!! pipeline failed....'
+        }
+        always {
+            echo 'say goodbay'
+        }
+    }
+}
